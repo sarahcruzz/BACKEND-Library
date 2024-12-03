@@ -1,18 +1,23 @@
-require('dotenv').config()
-const express = require('express')
-const mongoose = require('mongoose')
-const app = express()
-const authRoutes = require('./routes/authRoutes')
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const bookRoutes = require('./routes/books'); // Importando as rotas
+const path = require('path');
 
-app.use(express.json())
-app.use('/api/auth', authRoutes)
+const app = express();
 
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParses: true,
-    useUnifiedTopology: true,
-})
-.then(() => console.log('Conectado ao MongoDB'))
-.catch((error) => console.error('Erro ao conectar ao MongoDB'))
+// Conexão com MongoDB (sem as opções obsoletas)
+mongoose.connect('mongodb+srv://root:root@library.lgycr.mongodb.net/library?retryWrites=true&w=majority')
+    .then(() => console.log('Conectado ao MongoDB'))
+    .catch((error) => console.error('Erro ao conectar ao MongoDB:', error));
 
-const PORT = process.env.PORT || 5000
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`))
+// Middleware
+app.use(bodyParser.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Rotas
+app.use('/api/books', bookRoutes); // Configuração das rotas
+
+// Inicializando o servidor
+const PORT = 3000;
+app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
