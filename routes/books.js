@@ -99,4 +99,24 @@ router.delete("/:id", async (req, res) => {
     });
 
 
+// Rota GET com filtro de pesquisa
+router.get("/search", async (req, res) => {
+  const { query } = req.query; // O parâmetro `query` será usado para buscar nos campos
+  try {
+    const books = await Book.find({
+      $or: [
+        { titulo: { $regex: query, $options: "i" } }, // Busca por título (case insensitive)
+        { autor: { $regex: query, $options: "i" } },  // Busca por autor
+        { genero: { $regex: query, $options: "i" } }, // Busca por gênero
+      ],
+    });
+
+    res.status(200).json(books);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Erro ao buscar livros", error });
+  }
+});
+
+
 module.exports = router
