@@ -1,29 +1,36 @@
+require('dotenv').config()
 const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const bookRoutes = require('./routes/books'); // Importando as rotas
-const authRoutes = require('./routes/authRoutes')
+const authRoutes = require('./routes/authRoutes');
 const path = require('path');
 
 const app = express();
 
-// Ativar o CORS para todas as origens (ou você pode restringir para uma URL específica)
+// Configuração do CORS (Restrinja se necessário)
 app.use(cors());
 
-// Conexão com MongoDB (sem as opções obsoletas)
-mongoose.connect('mongodb+srv://root:root@library.lgycr.mongodb.net/library?retryWrites=true&w=majority')
+// Conexão com o MongoDB
+mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('Conectado ao MongoDB'))
     .catch((error) => console.error('Erro ao conectar ao MongoDB:', error));
 
-// Middleware
+// Middlewares
 app.use(bodyParser.json());
-app.use('/uploads', express.static(path.join(__dirname,'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Rotas
-app.use('/api/books', bookRoutes); // Configuração das rotas
-app.use('/api/auth', authRoutes)
+app.use('/api/books', bookRoutes);
+app.use('/api/auth', authRoutes);
 
-// Inicializando o servidor
-const PORT = 3000;
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+// Configuração de inicialização do servidor
+const PORT = process.env.PORT || 3000; // Suporte para variável de ambiente
+
+// Exportar o app para testes
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+}
+
+module.exports = app;
