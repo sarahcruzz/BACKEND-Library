@@ -125,9 +125,6 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     }
 });
 
-<<<<<<< HEAD
-module.exports = router;
-=======
 router.delete("/:id", async (req, res) => {
     try {
         const deletedBook = await Book.findByIdAndDelete(req.params.id);
@@ -142,25 +139,5 @@ router.delete("/:id", async (req, res) => {
     });
 
 
-// Rota GET com filtro de pesquisa
-router.get("/search", async (req, res) => {
-  const { query } = req.query; // O parâmetro `query` será usado para buscar nos campos
-  try {
-    const books = await Book.find({
-      $or: [
-        { titulo: { $regex: query, $options: "i" } }, // Busca por título (case insensitive)
-        { autor: { $regex: query, $options: "i" } },  // Busca por autor
-        { genero: { $regex: query, $options: "i" } }, // Busca por gênero
-      ],
-    });
+module.exports = router;
 
-    res.status(200).json(books);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Erro ao buscar livros", error });
-  }
-});
-
-
-module.exports = router
->>>>>>> e080caa2d4c4a8ca95fe7921dc201e3f0b35c3d3

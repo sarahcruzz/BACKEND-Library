@@ -9,7 +9,7 @@ const path = require('path');
 
 const app = express();
 
-// Configuração do CORS (Restrinja se necessário)
+// Configuração do CORS
 app.use(cors());
 
 // Conexão com o MongoDB

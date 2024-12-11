@@ -18,21 +18,32 @@ exports.register = async (req, res) => {
 }
 
 exports.login = async (req, res) => {
-    const { username, password} = req.body
+    const { username, password } = req.body;
 
-    try{
-        const user = await User.findOne({ username })
-        if (!user) return res.status(400).json({ error: 'Usuário não encontrado'})
-        
-        const isMatch = await bcrypt.compare(password, user.password)
-        if (!isMatch) return res.status(400).json({ error: 'Senha incorreta'})
+    try {
+        // Busca o usuário pelo nome
+        const user = await User.findOne({ username });
+        if (!user) {
+            return res.status(400).json({ error: 'Usuário não encontrado' });
+        }
 
-            const token = jwt.sign({ id: user._id}, process.env, JWT_SECRET,  {expiresIn: '1h'})
-            res.json({ token })
-    } catch (error){
-        return res.status(500).json({ error: 'Erro ao fazer login'})        
+        // Verifica se a senha está correta
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ error: 'Senha incorreta' });
+        }
+
+        // Gera o token JWT
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        // Retorna o token
+        res.json({ token });
+    } catch (error) {
+        console.error('Erro no login:', error); // Log detalhado para depuração
+        return res.status(500).json({ error: 'Erro ao fazer login' });
     }
-}
+};
+
 
 exports.getAllUsers = async (req, res) => {
     try {
