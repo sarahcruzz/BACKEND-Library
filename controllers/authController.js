@@ -33,3 +33,25 @@ exports.login = async (req, res) => {
         return res.status(500).json({ error: 'Erro ao fazer login'})        
     }
 }
+
+exports.getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find({}, '-password'); // Exclui o campo `password` por segurança
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar usuários' });
+    }
+};
+
+exports.getUserById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const user = await User.findById(id);
+        if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
+
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar o usuário' });
+    }
+};
