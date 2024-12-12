@@ -10,8 +10,8 @@ const BookSchema = new mongoose.Schema({
     descricao: { type: String, required: true},
     status: { 
         type: String, 
-        enum: ['available', 'borrowed'], // Status do livro
-        default: 'available' // O livro começa disponível
+        enum: ['Disponível', 'Emprestado'], // Status do livro
+        default: 'Disponível' // O livro começa disponível
     },
 })
 

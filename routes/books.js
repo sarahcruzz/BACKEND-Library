@@ -164,7 +164,39 @@ router.get('/dashboard/books', async (req, res) => {
     }
 });
 
+// Atualizar status do livro
+router.post('/books/:id/loan', async (req, res) => {
+    const { id } = req.params;
 
+    try {
+        const book = await Book.findById(id);
+        if (!book) {
+            return res.status(404).json({ error: 'Livro não encontrado' });
+        }
+
+        if (book.status === 'Emprestado') {
+            return res.status(400).json({ error: 'Livro já está emprestado' });
+        }
+
+        book.status = 'Emprestado';
+        await book.save();
+
+        res.json({ message: 'Livro emprestado com sucesso', book });
+    } catch (error) {
+        console.error('Erro ao emprestar o livro:', error);
+        res.status(500).json({ error: 'Erro no servidor' });
+    }
+});
+
+router.get('/books/loaned', async (req, res) => {
+    try {
+        const books = await Book.find({ status: 'Emprestado' });
+        res.json(books);
+    } catch (error) {
+        console.error('Erro ao buscar livros emprestados:', error);
+        res.status(500).json({ error: 'Erro no servidor' });
+    }
+});
 
 module.exports = router;
 
