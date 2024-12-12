@@ -138,6 +138,33 @@ router.delete("/:id", async (req, res) => {
     }
     });
 
+// Endpoint para dados dos usuários
+router.get('/dashboard/users', async (req, res) => {
+    try {
+        const totalUsers = await User.countDocuments();
+        const activeUsers = await User.countDocuments({ active: true });
+        const inactiveUsers = totalUsers - activeUsers;
+
+        res.json({ totalUsers, activeUsers, inactiveUsers });
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar dados dos usuários.' });
+    }
+});
+
+// Endpoint para dados dos livros
+router.get('/dashboard/books', async (req, res) => {
+    try {
+        const totalBooks = await Book.countDocuments();
+        const booksBorrowed = await Book.countDocuments({ status: 'borrowed' });
+        const booksAvailable = totalBooks - booksBorrowed;
+
+        res.json({ totalBooks, booksBorrowed, booksAvailable });
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar dados dos livros.' });
+    }
+});
+
+
 
 module.exports = router;
 

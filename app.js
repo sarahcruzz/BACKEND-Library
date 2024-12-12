@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const bookRoutes = require('./routes/books'); // Importando as rotas
 const authRoutes = require('./routes/authRoutes');
+const loanRoutes = require('./routes/loanRoutes');
 const path = require('path');
 
 const app = express();
@@ -24,6 +25,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Rotas
 app.use('/api/books', bookRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/loans', loanRoutes);
+
 
 // Configuração de inicialização do servidor
 const PORT = process.env.PORT || 3000; // Suporte para variável de ambiente

@@ -1,9 +1,21 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-    username: { type: String, required: true, unique: true },
-    password: { type: String, required: true }
-})
+    username: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    active: {
+        type: Boolean,
+        default: true // Usuário ativo por padrão
+    }
+}, {
+    timestamps: true // Adiciona campos createdAt e updatedAt automaticamente
+});
 
-// Corrigir a linha abaixo para usar module.exports em vez de MediaSourceHandle.exports
-module.exports = mongoose.model('User', userSchema)
+module.exports = mongoose.model('User', userSchema);

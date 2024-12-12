@@ -66,3 +66,29 @@ exports.getUserById = async (req, res) => {
         res.status(500).json({ error: 'Erro ao buscar o usuário' });
     }
 };
+
+exports.activateUser = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const user = await User.findByIdAndUpdate(id, { active: true }, { new: true });
+        if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
+
+        res.json({ message: 'Usuário ativado com sucesso', user });
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao ativar usuário' });
+    }
+};
+
+exports.deactivateUser = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const user = await User.findByIdAndUpdate(id, { active: false }, { new: true });
+        if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
+
+        res.json({ message: 'Usuário desativado com sucesso', user });
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao desativar usuário' });
+    }
+};
